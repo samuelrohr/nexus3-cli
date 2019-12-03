@@ -421,6 +421,27 @@ class NexusClient(object):
 
         return upload_count
 
+    @staticmethod
+    def _ensure(local_absolute_path):
+        """
+        Create all dirs on the path and the file.
+        """
+        if local_absolute_path.find('//') != -1:
+            sep = '//'
+        elif local_absolute_path.find('\\\\') != -1:
+            sep = '\\\\'
+        elif local_absolute_path.find('\\') != -1:
+            sep = '\\'
+        else:
+            sep = '/'
+
+        parts = local_absolute_path.split(sep)
+        dirs = sep.join(parts[:-1])
+
+        os.makedirs(dirs)
+        with open(local_absolute_path, 'w') as _file:
+            _file.write('')
+
     def _remote_path_to_local(
             self, remote_src, local_dst, flatten, create=True):
         """
@@ -463,11 +484,11 @@ class NexusClient(object):
                 local_relative = os.path.join(
                     local_relative_dir, dst_file_name)
 
-        destination_path = py.path.local(local_dst)
-        local_absolute_path = destination_path.join(local_relative)
+        local_absolute_path = local_dst + local_relative
 
         if create:
-            local_absolute_path.ensure(dir=remote_isdir)
+            if not os.path.exists(local_absolute_path):
+                self._ensure(local_absolute_path)
         return str(local_absolute_path)
 
     @staticmethod
