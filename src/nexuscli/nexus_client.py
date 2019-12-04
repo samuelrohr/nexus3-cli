@@ -421,22 +421,12 @@ class NexusClient(object):
 
         return upload_count
 
-    @staticmethod
-    def _ensure(local_absolute_path):
+    def _ensure(self, local_absolute_path):
         """
         Create all dirs on the path and the file.
         """
-        if local_absolute_path.find('//') != -1:
-            sep = '//'
-        elif local_absolute_path.find('\\\\') != -1:
-            sep = '\\\\'
-        elif local_absolute_path.find('\\') != -1:
-            sep = '\\'
-        else:
-            sep = '/'
-
-        parts = local_absolute_path.split(sep)
-        dirs = sep.join(parts[:-1])
+        parts = local_absolute_path.split(self._local_sep)
+        dirs = self._local_sep.join(parts[:-1])
 
         os.makedirs(dirs)
         with open(local_absolute_path, 'w') as _file:
