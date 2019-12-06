@@ -11,7 +11,6 @@ requires = [
     'future',
     'faker',
     'inflect',
-    'py',
     'future',
     'requests[security]>=2.14.2',
     'six',

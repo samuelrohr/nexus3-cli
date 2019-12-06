@@ -1,7 +1,6 @@
 import json
 import logging
 import os.path
-import py
 import requests
 import sys
 from clint.textui import progress
@@ -428,7 +427,7 @@ class NexusClient(object):
         parts = local_absolute_path.split(self._local_sep)
         dirs = self._local_sep.join(parts[:-1])
 
-        os.makedirs(dirs)
+        os.makedirs(dirs, exist_ok=True)
         with open(local_absolute_path, 'w') as _file:
             _file.write('')
 
